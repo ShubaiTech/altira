@@ -31,7 +31,7 @@ jobs:
 
       # Build Flutter web app
       - name: Build web
-        run: flutter build web --release
+        run: flutter build web --release --base-href "/altira/"
 
       # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
