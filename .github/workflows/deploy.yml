@@ -1,14 +1,8 @@
-name: Deploy Flutter Web to GitHub Pages
+name: Deploy Flutter Web to Firebase Hosting
 
 on:
   push:
     branches: [ master ]  # Trigger on push to 'master' branch
-
-# Add permissions for GITHUB_TOKEN
-permissions:
-  contents: write
-  pages: write
-  id-token: write
 
 jobs:
   build-and-deploy:
@@ -29,14 +23,15 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      # Build Flutter web app
+      # Build Flutter web app (no base-href needed for Firebase)
       - name: Build web
-        run: flutter build web --release --base-href "/altira/"
+        run: flutter build web --release
 
-      # Deploy to GitHub Pages
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      # Deploy to Firebase Hosting
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/web  # Deploy the 'build/web' folder
-          keep_files: false        # Clean old files before deployment
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+          projectId: altira-ec724  # Replace with your actual project ID
+          channelId: live
